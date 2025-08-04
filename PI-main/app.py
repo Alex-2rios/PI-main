@@ -354,5 +354,42 @@ def eliminar_cuenta():
     return redirect(url_for('perfil'))
 
 
+@app.route('/rutinas')
+def rutinas():
+    global racha, color_racha
+
+    rutinas_data = [
+        {
+            "id": 1,
+            "title": "Rutina de Mañana",
+            "objective": "Empieza el día con energía",
+            "img": "img/Imagen1.png",
+            "activities": [
+                "Desayuno saludable",
+                "Ejercicio ligero",
+                "Lectura matutina",
+            ],
+        },
+        {
+            "id": 2,
+            "title": "Rutina Nocturna",
+            "objective": "Relájate antes de dormir",
+            "img": "img/imagen3.png",
+            "activities": [
+                "Cenar ligero",
+                "Meditar",
+                "Leer un libro",
+            ],
+        },
+    ]
+
+    return render_template(
+        "rutinas.html",
+        rutinas=rutinas_data,
+        racha=racha,
+        color_racha=color_racha,
+    )
+
+
 if __name__ == '__main__':
     app.run(debug=True)
