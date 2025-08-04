@@ -90,7 +90,9 @@
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "{{ url_for('main.eliminar_actividad', id='__ID__') }}".replace('__ID__', id);
+                    // Generate base URL with a dummy integer and replace it with the real id
+                    const url = "{{ url_for('main.eliminar_actividad', id=0) }}".replace('0', id);
+                    window.location.href = url;
                 }
             });
         }
