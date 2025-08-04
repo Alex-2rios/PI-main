@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='/css/registrarse.css') }}">
 </head>
 <body>
+    {% include 'navbar.html' %}
     <div class="register-container">
         <img src="{{ url_for('static', filename='/img/logo.png') }}" alt="Priority Pulse Logo" class="logo">
         <h3>Sign Up</h3>
@@ -13,7 +14,7 @@
             <p style="color: red;">{{ error }}</p>
         {% endif %}
 
-        <form method="POST" action="{{ url_for('registrarse') }}">
+        <form method="POST" action="{{ url_for('main.registrarse') }}">
             <div class="row">
                 <input type="text" name="Nombre" placeholder="Nombre" >
                 {% if errores and errores.Nombre %}
@@ -37,7 +38,7 @@
             </div>
             <button type="submit">Registrarte</button>
         </form>
-        <p class="login-link">¿Ya tienes una cuenta? <a href="{{ url_for('login') }}">Inicia Sesión</a></p>
+        <p class="login-link">¿Ya tienes una cuenta? <a href="{{ url_for('main.login') }}">Inicia Sesión</a></p>
     </div>
 </body>
 </html>

@@ -1,11 +1,69 @@
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
     font-family: 'Montserrat', sans-serif;
     background: #ffffff;
     margin: 0;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #b39ddb;
+    padding: 10px 30px;
+    font-weight: bold;
+}
+
+.navbar a {
+    color: #4545EA;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 25px;
+    font-weight: bolder;
+}
+
+.navbar a:hover {
+    transform: scale(1.1) translateY(-3px);
+    color: white;
+}
+
+.navbar .logo-nav {
+    height: 50px;
+}
+
+.open-modal-btn {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    outline: none;
+    cursor: default;
+}
+
+.open-modal-btn:focus,
+.open-modal-btn:hover {
+    border: none;
+    box-shadow: none;
+    outline: none;
+}
+
+@keyframes fuego {
+    0%   { color: #ff5722; text-shadow: 0 0 20px #ff5722; }
+    50%  { color: #ff9800; text-shadow: 0 0 20px #ff9800; }
+    100% { color: #ff5722; text-shadow: 0 0 20px #ff5722; }
+}
+.racha {
+    font-weight: bold;
+    font-size: 24px;
+    animation: fuego 1.5s infinite alternate;
+}
+.racha.gold {
+    color: gold;
+    animation: none;
+    text-shadow: 0 0 15px gold;
+}
+.racha .manita, .racha .carita {
+    display: none;
 }
 
 .register-container {
@@ -17,6 +75,7 @@ body {
     max-width: 600px;
     width: 100%;
     border: 2px solid #dddddd;
+    margin: 80px auto;
 }
 
 .logo {

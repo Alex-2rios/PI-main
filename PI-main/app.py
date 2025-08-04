@@ -1,3 +1,4 @@
+from flask import Blueprint
 from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session
 from db import db
 from sqlalchemy.exc import SQLAlchemyError 
@@ -9,6 +10,8 @@ from tablas.usuarios import Usuarios
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
+
+main = Blueprint('main', __name__)
 
 # Lista de tareas de ejemplo
 tareas_importantes = [
@@ -34,7 +37,7 @@ def create_tables():
 
 
 
-@app.route('/', methods=['GET', 'POST'])
+@main.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form['email']
@@ -43,14 +46,14 @@ def login():
         usuario = tablas.Usuarios.query.filter_by(email=email).first()
         if usuario and usuario.contrasena == password:
             session['usuario_id'] = usuario.id 
-            return redirect(url_for('actividades'))
+            return redirect(url_for('main.actividades'))
         else:
             error = "Credenciales incorrectas"
             return render_template('login.html', error=error)
     return render_template('login.html')
 
 
-@app.route('/registrarse', methods=['GET', 'POST'])
+@main.route('/registrarse', methods=['GET', 'POST'])
 def registrarse():
     errores = {}
     error = None
@@ -84,20 +87,20 @@ def registrarse():
             db.session.add(nuevo_usuario)
             db.session.commit()
 
-            return redirect(url_for('login'))
+            return redirect(url_for('main.login'))
 
-        return render_template('registrarse.html', errores=errores, error=error)
+        return render_template('registrarse.html', errores=errores, error=error, racha=racha, color_racha=color_racha)
 
-    return render_template('registrarse.html', errores=errores)
+    return render_template('registrarse.html', errores=errores, racha=racha, color_racha=color_racha)
 
-@app.route('/nueva_actividad',methods=['GET'])
+@main.route('/nueva_actividad',methods=['GET'])
 def NvActividad():
     racha = 0
     color_racha = 'default'
     errores = {}
     return render_template('NvActividad.html', racha=racha, color_racha=color_racha, errores=errores)
 
-@app.route('/nueva_actividad',methods=['POST'])
+@main.route('/nueva_actividad',methods=['POST'])
 def PostNvActividad():
     print("Recibiendo datos de nueva actividad")
     errores = {}
@@ -137,7 +140,7 @@ def PostNvActividad():
             db.session.add(nueva_tarea)
             db.session.commit()
             flash('Actividad agregada correctamente')
-            return redirect(url_for('actividades'))
+            return redirect(url_for('main.actividades'))
         
         except SQLAlchemyError as e:
             errores['dbError'] = 'Error al guardar actividad en la base de datos'
@@ -151,14 +154,14 @@ def PostNvActividad():
     return render_template('NvActividad.html', racha=racha, color_racha=color_racha, errores = errores)
 
 # Ruta para editar actividad
-@app.route('/editar_actividad/<int:id>', methods=['GET', 'POST'])
+@main.route('/editar_actividad/<int:id>', methods=['GET', 'POST'])
 def editar_actividad(id):
     errores = {}
     actividad = Actividades.query.get_or_404(id)
 
     if not actividad:
         flash('Actividad no encontrada', 'error')
-        return redirect(url_for('actividades'))
+        return redirect(url_for('main.actividades'))
 
     if request.method == 'POST':
         titulo = request.form.get('nombre', '').strip()
@@ -191,7 +194,7 @@ def editar_actividad(id):
 
                 db.session.commit()
                 flash('Actividad actualizada correctamente')
-                return redirect(url_for('actividades'))
+                return redirect(url_for('main.actividades'))
 
             except SQLAlchemyError as e:
                 errores['dbError'] = 'Error al actualizar la actividad en la base de datos'
@@ -204,19 +207,19 @@ def editar_actividad(id):
     return render_template('AcActividad.html', actividad=actividad, errores=errores, racha=racha, color_racha=color_racha)
 
 # Ruta para eliminar actividad
-@app.route('/eliminar_actividad/<int:id>')
+@main.route('/eliminar_actividad/<int:id>')
 def eliminar_actividad(id):
     actividad = Actividades.query.get_or_404(id)
     
     if not actividad:
         flash('Actividad no encontrada', 'error')
-        return redirect(url_for('actividades'))
+        return redirect(url_for('main.actividades'))
 
     try:
         actividad.estado = 0
         db.session.commit()
         flash('Actividad eliminada correctamente')
-        return redirect(url_for('actividades'))
+        return redirect(url_for('main.actividades'))
 
     except SQLAlchemyError as e:
         flash('Error al eliminar la actividad', 'error')
@@ -224,10 +227,10 @@ def eliminar_actividad(id):
     except Exception as e:
         flash('Error al eliminar la actividad', 'error')
 
-    return redirect(url_for('actividades'))
+    return redirect(url_for('main.actividades'))
 
 # Ruta para manejar las actividades
-@app.route('/actividades', methods=['GET', 'POST'])
+@main.route('/actividades', methods=['GET', 'POST'])
 def actividades():
     global racha, color_racha
     racha = 0
@@ -237,7 +240,7 @@ def actividades():
     usuario_id = session.get('usuario_id')
     if not usuario_id:
         flash('Debes iniciar sesión para continuar')
-        return redirect(url_for('login'))
+        return redirect(url_for('main.login'))
     try:
         # Obtener actividades del usuario
         actividades_usuario = tablas.Actividades.query.filter_by(usuario_id=usuario_id, estado=1).all()
@@ -271,7 +274,7 @@ def actividades():
             else:
                 color_racha = 'default'
 
-            return redirect(url_for('actividades'))
+            return redirect(url_for('main.actividades'))
         
     except SQLAlchemyError as e:
         errores['actividades_error'] = 'Error al obtener actividades de la base de datos'
@@ -287,7 +290,7 @@ def actividades():
 
     
 # Endpoint para manejar la actualización de las tareas
-@app.route('/actualizar_tarea', methods=['POST'])
+@main.route('/actualizar_tarea', methods=['POST'])
 def actualizar_tarea():
     global racha, color_racha
 
@@ -305,12 +308,12 @@ def actualizar_tarea():
 
     return jsonify({'racha': racha, 'color_racha': color_racha})
 
-@app.route('/perfil')
+@main.route('/perfil')
 def perfil():
     usuario = Usuarios.query.get_or_404(session['usuario_id'])
-    return render_template('perfil.html', usuario=usuario)
+    return render_template('perfil.html', usuario=usuario, racha=racha, color_racha=color_racha)
 
-@app.route('/actualizar_perfil', methods=['POST'])
+@main.route('/actualizar_perfil', methods=['POST'])
 def actualizar_perfil():
     usuario = Usuarios.query.get_or_404(session['usuario_id'])
     nombre = request.form.get('nombre', '').strip()
@@ -333,9 +336,9 @@ def actualizar_perfil():
     else:
         flash('Por favor, completa todos los campos')
 
-    return redirect(url_for('perfil'))
+    return redirect(url_for('main.perfil'))
 
-@app.route('/eliminar_cuenta')
+@main.route('/eliminar_cuenta')
 def eliminar_cuenta():
     usuario = Usuarios.query.get_or_404(session['usuario_id'])
     
@@ -345,16 +348,16 @@ def eliminar_cuenta():
         db.session.commit()
         flash('Cuenta eliminada con éxito', 'success')
         session.pop('usuario_id', None)  # Eliminar la sesión del usuario
-        return redirect(url_for('login'))
+        return redirect(url_for('main.login'))
     except SQLAlchemyError as e:
         db.session.rollback()
         flash('Error al eliminar la cuenta', 'error')
         print(f"Error al eliminar la cuenta: {e}")
     
-    return redirect(url_for('perfil'))
+    return redirect(url_for('main.perfil'))
 
 
-@app.route('/rutinas')
+@main.route('/rutinas')
 def rutinas():
     global racha, color_racha
 
@@ -390,6 +393,8 @@ def rutinas():
         color_racha=color_racha,
     )
 
+
+app.register_blueprint(main)
 
 if __name__ == '__main__':
     app.run(debug=True)
