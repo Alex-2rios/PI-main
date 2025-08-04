@@ -36,7 +36,7 @@
                 <div class="tarjetas calendario-grid">
                     {% for tarea in tareas_importantes %}
                     <div class="tarjeta {% if tarea.completada %}completada{% endif %}">
-                        <img src="{{ tarea.imagen }}" class="icono-tarea">
+                        <img src="{{ tarea.imagen }}" class="icono-tarea" alt="Icono de {{ tarea.titulo }}">
                         <h3>{{ tarea.titulo }}</h3>
                         <span>{{ tarea.hora }}</span>
                         <p class="descripcion">{{ tarea.descripcion }}</p>

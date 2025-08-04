@@ -1,3 +1,7 @@
+:root {
+    --tarea-icon-size: 48px;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -107,8 +111,8 @@ h2{
 
 /* Ícono */
 .icono-tarea {
-    width: 32px;
-    height: 32px;
+    width: var(--tarea-icon-size);
+    height: var(--tarea-icon-size);
     margin-right: 10px;
     object-fit: contain;
 }
