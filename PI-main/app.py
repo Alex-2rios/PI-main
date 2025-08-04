@@ -178,7 +178,7 @@ def editar_actividad(id):
                 hora_obj = datetime.strptime(hora, '%H:%M').time()
             except ValueError:
                 errores['fechaError'] = 'Formato de fecha incorrecto. Use YYYY-MM-DD.'
-                return render_template('editar_actividad.html', actividad=actividad, errores=errores)
+                return render_template('AcActividad.html', actividad=actividad, errores=errores, racha=racha, color_racha=color_racha)
 
             try:
                 actividad.titulo = titulo
@@ -199,9 +199,9 @@ def editar_actividad(id):
             except Exception as e:
                 errores['dbError'] = 'Error al actualizar la actividad'
                 
-        return render_template('editar_actividad.html', actividad=actividad, errores=errores)
+        return render_template('AcActividad.html', actividad=actividad, errores=errores, racha=racha, color_racha=color_racha)
 
-    return render_template('AcActividad.html', actividad=actividad, errores=errores)
+    return render_template('AcActividad.html', actividad=actividad, errores=errores, racha=racha, color_racha=color_racha)
 
 # Ruta para eliminar actividad
 @app.route('/eliminar_actividad/<int:id>')
