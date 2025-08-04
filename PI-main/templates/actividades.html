@@ -73,7 +73,13 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    document.querySelector('#racha-fuego').innerText = data.racha + ' 🔥';
+                    document.getElementById('racha-contador').textContent = data.racha;
+                    const rachaEl = document.getElementById('racha-fuego');
+                    if (data.color_racha === 'gold') {
+                        rachaEl.classList.add('gold');
+                    } else {
+                        rachaEl.classList.remove('gold');
+                    }
                 });
             });
         });
