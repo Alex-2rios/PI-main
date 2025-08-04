@@ -9,27 +9,13 @@
 </head>
 <body>
     <!-- Barra superior -->
-    <nav class="navbar">
-        <div class="box">
-            <button class="open-modal-btn">
-                <span id="racha-fuego" class="racha" style="color: {{ color_racha }}">
-                    {{ racha }} 🔥
-                    <span class="manita">✋</span>
-                    <span class="carita">😊</span>
-                </span>
-            </button>
-        </div>
-        <a href="{{ url_for('rutinas') }}">Rutinas</a>
-        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="logo-nav">
-        <a href="{{ url_for('actividades') }}">Actividades</a>
-        <a href="{{ url_for('login') }}">Cerrar Sesión</a>
-    </nav>
+    {% include 'navbar.html' %}
 
     <main class="contenedor-perfil">
         <!-- Formulario -->
         <section class="editar-perfil">
             <h2>Editar</h2>
-            <form action="{{ url_for('actualizar_perfil') }}" method="POST">
+            <form action="{{ url_for('main.actualizar_perfil') }}" method="POST">
                 <input type="text" placeholder="Nombre" value="{{ usuario.nombre }}" name="nombre">
                 <input type="text" placeholder="Apellido" value="{{ usuario.apellido }}" name="apellido">
                 <input type="password" placeholder="Contraseña" value="{{ usuario.contrasena }}" name="contrasena">
@@ -103,7 +89,7 @@
                 reverseButtons: true  // Cambia el orden de los botones (primero el "Cancelar")
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "/eliminar_cuenta";
+                    window.location.href = "{{ url_for('main.eliminar_cuenta') }}";
                 }
             });
         }

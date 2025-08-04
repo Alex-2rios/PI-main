@@ -8,25 +8,8 @@
 </head>
 
 <body>
+    {% include 'navbar.html' %}
     <div class="container">
-        <nav class="navbar">
-            <div class="box">
-                <button class="open-modal-btn">
-                    <span id="racha-fuego" class="racha">
-                        {{ racha }} 🔥
-                        <span class="manita">✋</span>
-                        <span class="carita">😊</span>
-                    </span>
-                </button>
-            </div>
-            <a href="#">Perfil</a>
-            <a href="#">Rutinas</a>
-            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="logo-nav">
-            </a>
-            <a href="{{ url_for('actividades') }}">Actividades</a>
-            <a href="#">Cerrar Sesión</a>
-        </nav>
-
         <div class="info">
             {% with mensajes = get_flashed_messages() %}
                 {% if mensajes %}
@@ -47,7 +30,7 @@
         </div>
 
         <div class="crear-actividad">
-            <form method="POST" action="{{ url_for('editar_actividad', id=actividad.id) }}">
+            <form method="POST" action="{{ url_for('main.editar_actividad', id=actividad.id) }}">
                 <img id="imagen-actividad" src="../{{ actividad.imagen }}"
                     alt="Imagen de actividad" class="imagen-actividad">
 
